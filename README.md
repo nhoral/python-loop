@@ -21,6 +21,7 @@ running:
 - pyautogui -> pip install pyautogui
 - OpenCV -> pip install opencv-python
 - keyboard -> pip install keyboard
+- input -> pip install input
 
 RUNNING
 

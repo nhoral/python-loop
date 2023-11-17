@@ -3,11 +3,14 @@ import time
 import keyboard
 from gamepad import XboxController
 import cv2
+import platform
 import util
 
 # The macro set you want to run
 from profiles import warlock
 macros = warlock.macros
+
+FILE_SEPARATOR = "\\" if platform.system() == "Darwin" else "/"
 
 DEFAULT_KEY = "e"               # Default key to be pressed if no macros are true
 STOP_KEY = "n"                  # Key to stop the python process
@@ -41,7 +44,7 @@ def getIconImages(combatState):
     icons = {}
 
     for key in combatState:
-        icons[key] = cv2.imread('images\\' + key + '.PNG')
+        icons[key] = cv2.imread('images' + FILE_SEPARATOR + key + '.PNG')
 
     return icons
 

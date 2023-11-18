@@ -11,6 +11,7 @@ from profiles import warlock
 macros = warlock.macros
 
 FILE_SEPARATOR = "\\" if platform.system() == "Darwin" else "/"
+ADJUST_FOR_RETINA =  True if platform.system() == "Darwin" else False
 
 DEFAULT_KEY = "e"               # Default key to be pressed if no macros are true
 STOP_KEY = "n"                  # Key to stop the python process
@@ -44,7 +45,12 @@ def getIconImages(combatState):
     icons = {}
 
     for key in combatState:
-        icons[key] = cv2.imread('images' + FILE_SEPARATOR + key + '.PNG')
+        image = cv2.imread('images' + FILE_SEPARATOR + key + '.PNG')
+
+        if (ADJUST_FOR_RETINA):
+            image = cv2.resize(image, (0, 0), fx = 0.5, fy = 0.5)
+
+        icons[key] = image
 
     return icons
 

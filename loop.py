@@ -7,8 +7,8 @@ import platform
 import util
 
 # The macro set you want to run
-from profiles import warlock
-macros = warlock.macros
+from profiles import warrior
+macros = warrior.macros
 
 ADJUST_FOR_RETINA =  True if platform.system() == "Darwin" else False
 
@@ -81,7 +81,7 @@ while (True):
         for key, val in combatState.items():
             try:
                 # Throws exception if image not found
-                pyautogui.locate(iconImages[key], screen, confidence=0.95)
+                pyautogui.locate(iconImages[key], screen)
                 combatState[key] = True
             except:
                 if DEBUG: print(key + ' not found in image')

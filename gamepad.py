@@ -2,11 +2,14 @@ from inputs import get_gamepad
 import math
 import threading
 
+BUTTON_B = 'r'
+BUTTON_L_B = '1'
+
+BUTTON_X = 'e'
+BUTTON_L_X = '2'
+
 BUTTON_Y = 'q'
 BUTTON_L_Y = '3'
-
-BUTTON_X = 'r'
-BUTTON_L_X = '1'
 
 class XboxController(object):
     MAX_TRIG_VAL = math.pow(2, 8)

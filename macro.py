@@ -15,8 +15,9 @@ class Macro():
 
     def predicatesMet(self, combatState, debug):
         for predicate in self.predicates:
+            # if debug: print(predicate.stateName + ' in combatState is ' + str(combatState[predicate.stateName]))
             if (combatState[predicate.stateName] != predicate.shouldBe):
-                if debug: print(predicate.stateName + ' was not ' + str(predicate.shouldBe))
+                # if debug: print(predicate.stateName + ' was not ' + str(predicate.shouldBe))
                 return False
         
         return True

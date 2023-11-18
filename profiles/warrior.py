@@ -1,5 +1,5 @@
 from macro import Macro, Predicate
-from gamepad import BUTTON_B, BUTTON_L_B, BUTTON_L_Y, BUTTON_L_X
+from gamepad import BUTTON_B, BUTTON_L_B, BUTTON_L_Y, BUTTON_L_X, BUTTON_Y
 
 have10Rage = Predicate('rage_10', True)
 have20Rage = Predicate('rage_20', True)
@@ -17,6 +17,7 @@ castThunderclapIfOff = Macro([ have20Rage, thunderclapOff ], BUTTON_L_Y)
 hamstringOff = Predicate('hamstring', False)
 castHamstringIfOff = Macro([ have10Rage, hamstringOff ], BUTTON_L_X)
 
+castDefaultAttack = Macro([], BUTTON_Y)
 
 # macro order, first macro to be true picks the key to press
 macros = [

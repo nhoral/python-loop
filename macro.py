@@ -1,3 +1,5 @@
+from threading import Timer
+
 ## Macro defintion, containing the criteria to activate, and the key to press when predicates are true
 # Example usage:
 #     immolationPredicate = Predicate('immolation', True)
@@ -9,16 +11,21 @@ class Predicate():
         self.shouldBe = shouldBe
 
 class Macro():
-    def __init__(self, predicates, keyToPress):
+    def __init__(self, predicates, keyToPress, debugName = 'Macro'):
         self.predicates = predicates
         self.keyToPress = keyToPress
 
+        # Debug name for logging 
+        self.debugName = debugName
+
     def predicatesMet(self, combatState, debug):
+        # Check the predicates against the combat state
         for predicate in self.predicates:
-            # if debug: print(predicate.stateName + ' in combatState is ' + str(combatState[predicate.stateName]))
             if (combatState[predicate.stateName] != predicate.shouldBe):
-                # if debug: print(predicate.stateName + ' was not ' + str(predicate.shouldBe))
+                if debug: print('predicates failed for ' + self.debugName + ', ' + predicate.stateName + ' was ' + str(combatState[predicate.stateName]) + ' shouldBe ' + str(predicate.shouldBe))
                 return False
-        
+
+        # Predicates were met
+        if debug: print('predicates met for ' + self.debugName)
         return True
     

@@ -5,10 +5,9 @@ import threading
 BUTTON_B = 'r'
 BUTTON_L_B = '1'
 
-BUTTON_X = 'e'
 BUTTON_L_X = '2'
 
-BUTTON_Y = 'q'
+BUTTON_Y = 'e'
 BUTTON_L_Y = '3'
 
 class XboxController(object):

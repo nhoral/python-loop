@@ -6,13 +6,11 @@ import cv2
 import platform
 import util
 
-# The macro set you want to run
-from profiles import warrior
-macros = warrior.macros
+from profiles import warlock
+macros = warlock.macros
 
 ADJUST_FOR_RETINA =  True if platform.system() == "Darwin" else False
 
-DEFAULT_KEY = "e"               # Default key to be pressed if no macros are true
 STOP_KEY = "n"                  # Key to stop the python process
 DEBUG = True                    # Displays extra logs to help with debugging keys
 
@@ -53,6 +51,12 @@ def getIconImages(combatState):
 
     return icons
 
+def pressKey(keyToPress):
+    if DEBUG: print('Sending: ' + keyToPress)
+    pyautogui.keyDown(keyToPress) 
+    time.sleep(0.001)
+    pyautogui.keyUp(keyToPress) 
+
 # util.captureRegion will allow you to capture an image of your region to debug
 region = getDefaultRegion(500, 500)
 
@@ -87,15 +91,9 @@ while (True):
                 if DEBUG: print(key + ' not found in image')
                 combatState[key] = False
 
-        keyToPress = DEFAULT_KEY
         for macro in macros:
             if (macro.predicatesMet(combatState, DEBUG)):
-                keyToPress = macro.keyToPress
+                pressKey(macro.keyToPress)
                 break
-
-        if DEBUG: print('Sending: ' + keyToPress)
-        pyautogui.keyDown(keyToPress) 
-        time.sleep(0.001)
-        pyautogui.keyUp(keyToPress) 
         
     time.sleep(0.05)

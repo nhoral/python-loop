@@ -85,6 +85,7 @@ while (True):
                 pyautogui.locate(iconImages[key], screen, confidence=0.95)
                 combatState[key] = True
             except:
+                if DEBUG: print(key + ' not found in image')
                 combatState[key] = False
 
         keyToPress = DEFAULT_KEY

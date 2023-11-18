@@ -4,6 +4,7 @@ import threading
 
 BUTTON_B = 'r'
 BUTTON_L_B = '1'
+BUTTON_R_B = '4'
 
 BUTTON_L_X = '2'
 

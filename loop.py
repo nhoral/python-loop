@@ -81,7 +81,7 @@ while (True):
 
     if (buttonPressed):
         if DEBUG: print('Button Pressed')
-        screen = pyautogui.screenshot(region=region)
+        screen = pyautogui.screenshot(region=region, confidence=0.95)
         for key, val in combatState.items():
             try:
                 # Throws exception if image not found

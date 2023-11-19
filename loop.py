@@ -81,11 +81,11 @@ while (True):
 
     if (buttonPressed):
         if DEBUG: print('Button Pressed')
-        screen = pyautogui.screenshot(region=region, confidence=0.95)
+        screen = pyautogui.screenshot(region=region)
         for key, val in combatState.items():
             try:
                 # Throws exception if image not found
-                pyautogui.locate(iconImages[key], screen)
+                pyautogui.locate(iconImages[key], screen, confidence=0.95)
                 combatState[key] = True
             except:
                 if DEBUG: print(key + ' not found in image')

@@ -15,13 +15,13 @@ battleShoutOff = Predicate('battleshout', False)
 castBattleShoutIfOff = Macro([have10Rage, battleShoutOff], BUTTON_B)
 
 rendOff = Predicate('rend', False)
-castRendIfOff = Macro([ have10Rage, targetIsNotUndeadOrMechanical, rendOff ], BUTTON_L_B)
+castRendIfOff = Macro([ have10Rage, rendOff ], BUTTON_L_B)
 
 thunderclapOff = Predicate('thunderclap', False)
 castThunderclapIfOff = Macro([ have20Rage, thunderclapOff ], BUTTON_L_Y)
 
 hamstringOff = Predicate('hamstring', False)
-castHamstringIfOff = Macro([ have10Rage, hamstringOff ], BUTTON_L_X)
+castHamstringIfOff = Macro([ have20Rage, hamstringOff ], BUTTON_L_X)
 
 castDefaultAttack = Macro([], BUTTON_Y)
 

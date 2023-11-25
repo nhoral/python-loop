@@ -6,8 +6,8 @@ import cv2
 import platform
 import util
 
-from profiles import hunter
-macros = hunter.macros
+from profiles import warrior
+macros = warrior.macros
 
 ADJUST_FOR_RETINA =  True if platform.system() == "Darwin" else False
 

@@ -6,16 +6,16 @@ import cv2
 import platform
 import util
 
-from profiles import warrior
-macros = warrior.macros
+from profiles import testimages
+macros = testimages.macros
 
 ADJUST_FOR_RETINA =  True if platform.system() == "Darwin" else False
 
-STOP_KEY = "n"                  # Key to stop the python process
+STOP_KEY = "]"                  # Key to stop the python process
 DEBUG = True                    # Displays extra logs to help with debugging keys
 
-DEFAULT_KEYBOARD_KEY = 'm'      # Default keyboard key you will press to engage the macros
-IS_KEYBOARD_MODE = False        # Whether to listen for keyboard key or controller input
+DEFAULT_KEYBOARD_KEY = '5'      # Default keyboard key you will press to engage the macros
+IS_KEYBOARD_MODE = True         # Whether to listen for keyboard key or controller input
 
 ## You can change this function to set the rectangle on the screen you want to check against
 def getDefaultRegion(width, height):
@@ -58,7 +58,9 @@ def pressKey(keyToPress):
     pyautogui.keyUp(keyToPress) 
 
 # util.captureRegion will allow you to capture an image of your region to debug
-region = getDefaultRegion(500, 500)
+region = (1500, 600, 500, 500)
+#util.captureRegion(1500, 600, 500, 500)
+#util.captureScreen()
 
 # Generate a set of unique conditions you are evaluating, based on your macros
 combatState = getDefaultCombatState(macros)

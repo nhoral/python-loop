@@ -10,7 +10,6 @@ BUTTON_L_X = '2'
 
 BUTTON_Y = 'e'
 BUTTON_L_Y = '3'
-BUTTON_R_Y = "5"
 
 class XboxController(object):
     MAX_TRIG_VAL = math.pow(2, 8)

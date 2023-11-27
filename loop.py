@@ -5,27 +5,12 @@ from gamepad import XboxController
 import cv2
 import platform
 import util
+import config
 
-from profiles import testimages
-macros = testimages.macros
+from profiles import rogue
+macros = rogue.macros
 
 ADJUST_FOR_RETINA =  True if platform.system() == "Darwin" else False
-
-STOP_KEY = "]"                  # Key to stop the python process
-DEBUG = True                    # Displays extra logs to help with debugging keys
-
-DEFAULT_KEYBOARD_KEY = '5'      # Default keyboard key you will press to engage the macros
-IS_KEYBOARD_MODE = True         # Whether to listen for keyboard key or controller input
-
-## You can change this function to set the rectangle on the screen you want to check against
-def getDefaultRegion(width, height):
-    screen = pyautogui.screenshot();
-    screenWidth, screenHeight = screen.size 
-    
-    left = screenWidth - width
-    top = screenHeight - height
-
-    return (int(left), int(top), int(width), int(height))
 
 ## Builds a map of all the unique states present in your macros
 def getDefaultCombatState(macros):
@@ -42,7 +27,7 @@ def getIconImages(combatState):
     icons = {}
 
     for key in combatState:
-        image = cv2.imread('images/' + key + '.PNG')
+        image = cv2.imread(config.IMAGES_FOLDER + '/' + key + '.png')
 
         if (ADJUST_FOR_RETINA):
             image = cv2.resize(image, (0, 0), fx = 0.5, fy = 0.5)
@@ -52,14 +37,14 @@ def getIconImages(combatState):
     return icons
 
 def pressKey(keyToPress):
-    if DEBUG: print('Sending: ' + keyToPress)
+    if config.DEBUG: print('Sending: ' + keyToPress)
     pyautogui.keyDown(keyToPress) 
     time.sleep(0.001)
     pyautogui.keyUp(keyToPress) 
 
 # util.captureRegion will allow you to capture an image of your region to debug
-region = (1500, 600, 500, 500)
-#util.captureRegion(1500, 600, 500, 500)
+region = config.REGION
+util.captureRegion(config.REGION[0], config.REGION[1], config.REGION[2], config.REGION[3])
 #util.captureScreen()
 
 # Generate a set of unique conditions you are evaluating, based on your macros
@@ -70,19 +55,19 @@ iconImages = getIconImages(combatState)
 print('Starting')
 
 # If we are in controller mode, get a reference to it, otherwise switch to keyboard mode
-if (IS_KEYBOARD_MODE == False):
+if (config.IS_KEYBOARD_MODE == False):
     joy = XboxController()
 
 while (True):
-    buttonPressed = keyboard.is_pressed(DEFAULT_KEYBOARD_KEY) if IS_KEYBOARD_MODE else joy.X
-    stopButtonPressed = keyboard.is_pressed(STOP_KEY)
+    buttonPressed = keyboard.is_pressed(config.DEFAULT_KEYBOARD_KEY) if config.IS_KEYBOARD_MODE else joy.LeftBumper
+    stopButtonPressed = keyboard.is_pressed(config.STOP_KEY)
 
     if (stopButtonPressed):
-        if DEBUG: print('Stop Pressed')
+        if config.DEBUG: print('Stop Pressed')
         break
 
     if (buttonPressed):
-        if DEBUG: print('Button Pressed')
+        if config.DEBUG: print('Button Pressed')
         screen = pyautogui.screenshot(region=region)
         for key, val in combatState.items():
             try:
@@ -90,11 +75,11 @@ while (True):
                 pyautogui.locate(iconImages[key], screen, confidence=0.95)
                 combatState[key] = True
             except:
-                if DEBUG: print(key + ' not found in image')
+                if config.DEBUG: print(key + ' not found in image')
                 combatState[key] = False
 
         for macro in macros:
-            if (macro.predicatesMet(combatState, DEBUG)):
+            if (macro.predicatesMet(combatState)):
                 pressKey(macro.keyToPress)
                 break
         

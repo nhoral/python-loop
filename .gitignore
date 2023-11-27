@@ -1,4 +1,5 @@
-DS_STORE
+__backup__
+.DS_STORE
 *.zip
 __debug__
 __pycache__

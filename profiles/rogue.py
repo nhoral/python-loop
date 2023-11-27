@@ -1,4 +1,5 @@
 from macro import Macro, Predicate
+import config
 
 ## PREDICATES
 #power meters
@@ -26,9 +27,12 @@ hasThreeComboPoints = Predicate('combo_3', True)
 hasFourComboPoints = Predicate('combo_4', True)
 hasFiveComboPoints = Predicate('combo_5', True)
 
+inCombat = Predicate('combat', True)
+notInCombat = Predicate('combat', False)
+
 #player buffs
 sliceAndDiceDown = Predicate('sliceanddice', False)
-stealthed = Predicate('stealth_buff', True)
+inStealth = Predicate('stealth_buff', True)
 outOfStealth = Predicate('stealth_buff', False)
 inCombat = Predicate('combat', True)
 notInCombat = Predicate('combat', False)
@@ -66,8 +70,8 @@ targetIsAggro = Predicate('target_aggro', True)
 targetIsNotAggro = Predicate('target_aggro', False)
 
 #target range
-inMeleeRange = Predicate('meleerange', True)
-notInMeleeRange = Predicate('meleerange', False)
+inMeleeRange = Predicate('enemy_in_melee_range', True)
+notInMeleeRange = Predicate('enemy_in_melee_range', False)
 
 #enemy proximity - note can't find images
 oneEnemyInMeleeRange = Predicate('enemies_1', True)
@@ -75,49 +79,80 @@ twoEnemyInMeleeRange = Predicate('enemies_2', True)
 threeEnemyInMeleeRange = Predicate('enemies_3', True)
 fourEnemyInMeleeRange = Predicate('enemies_4', True)
 
-#default attack
-castDefaultAttack = Macro([], "'")
+if (config.IS_KEYBOARD_MODE):
+    #default attack
+    castDefaultAttack = Macro([], "'")
 
-##MACROS (keys to use 1,2,3,e,r,f,x,c,v,6,7,8,9,0, -, =, ;, ')
-interuptTargetCast = Macro([ kickOffCooldown, enemyCastingSpell ], "2")
+    ##MACROS (keys to use 1,2,3,e,r,f,x,c,v,6,7,8,9,0, -, =, ;, ')
+    interuptTargetCast = Macro([ kickOffCooldown, enemyCastingSpell ], "2")
 
-evasionAt50Health = Macro( [ evasionOffCooldown, healthUnder50 ], "3")
-willOfTheForsaken = Macro([ fearedCharmedSlept, wotfOffCooldown], "0")
-castGougeAt20Health = Macro ([ inCombat, inMeleeRange, healthUnder20, gougeOffCooldown, gougeDebuffOff ], "v")
-bandageWhenGouged = Macro ([ gougeDebuffOn, bandageOffCooldown ], "7")
-#castVanishAt20Health = Macro([ inCombat, healthUnder20, vanishOffCooldown ], ";")
+    evasionAt50Health = Macro( [ evasionOffCooldown, healthUnder50 ], "3")
+    willOfTheForsaken = Macro([ fearedCharmedSlept, wotfOffCooldown], "0")
+    castGougeAt20Health = Macro ([ inCombat, inMeleeRange, healthUnder20, gougeOffCooldown, gougeDebuffOff ], "v")
+    bandageWhenGouged = Macro ([ gougeDebuffOn, bandageOffCooldown ], "7")
+    #castVanishAt20Health = Macro([ inCombat, healthUnder20, vanishOffCooldown ], ";")
 
-castGarrote = Macro([ stealthed, have50Power ], "x")
+    castGarrote = Macro([ inStealth, have50Power ], "x")
 
-#castFeintWhenAggro([ inCombat, targetIsAggro, feintOffCooldown, have20Power ], "=")
+    #castFeintWhenAggro([ inCombat, targetIsAggro, feintOffCooldown, have20Power ], "=")
 
-sliceandiceAtTwoComboPoints = Macro([ hasTwoComboPoints, sliceAndDiceDown, targetHealthOver50 ], "r")
+    sliceandiceAtTwoComboPoints = Macro([ hasTwoComboPoints, sliceAndDiceDown, targetHealthOver50 ], "r")
 
-eviscerateAtThreeComboPoints = Macro([ hasThreeComboPoints, targetHealthUnder20 ], "9")
-eviscerateAtFourComboPoints = Macro([ hasFourComboPoints, targetHealthUnder50 ], "9")
-eviscerateAtFiveComboPoints = Macro([ hasFiveComboPoints ], "9")
+    eviscerateAtThreeComboPoints = Macro([ hasThreeComboPoints, targetHealthUnder20 ], "9")
+    eviscerateAtFourComboPoints = Macro([ hasFourComboPoints, targetHealthUnder50 ], "9")
+    eviscerateAtFiveComboPoints = Macro([ hasFiveComboPoints ], "9")
 
-#ruptureAtXComboPoints
-#KidneyShotAtXComboPoints
+    #ruptureAtXComboPoints
+    #KidneyShotAtXComboPoints
 
-sinisterStrike = Macro([ have40Power], "e")
+    sinisterStrike = Macro([ have40Power], "e")
+else:
+    #default attack
+    castDefaultAttack = Macro([], config.GAMEPAD_LEFT, debugName='Default Attack')
+    stealthIfOutOfCombat = Macro([ notInCombat, outOfStealth ], config.GAMEPAD_X, debugName='Stealth')
+
+    #interuptTargetCast = Macro([ kickOffCooldown, enemyCastingSpell ], "2")
+
+   # evasionAt50Health = Macro( [ evasionOffCooldown, healthUnder50 ], "3")
+    willOfTheForsaken = Macro([ fearedCharmedSlept, wotfOffCooldown], config.GAMEPAD_DOWN, debugName='WOTF')
+    #castGougeAt20Health = Macro ([ inCombat, inMeleeRange, healthUnder20, gougeOffCooldown, gougeDebuffOff ], "v")
+    #bandageWhenGouged = Macro ([ gougeDebuffOn, bandageOffCooldown ], "7")
+    #castVanishAt20Health = Macro([ inCombat, healthUnder20, vanishOffCooldown ], ";")
+
+    #castGarrote = Macro([ stealthed, have50Power ], "x")
+
+    #castFeintWhenAggro([ inCombat, targetIsAggro, feintOffCooldown, have20Power ], "=")
+
+    #sliceandiceAtTwoComboPoints = Macro([ hasTwoComboPoints, sliceAndDiceDown, targetHealthOver50 ], "r")
+
+    eviscerateAtThreeComboPoints = Macro([ hasThreeComboPoints, targetHealthUnder20 ], config.GAMEPAD_UP, debugName='Eviscerate At Three')
+    eviscerateAtFourComboPoints = Macro([ hasFourComboPoints, targetHealthUnder50 ], config.GAMEPAD_UP, debugName='Eviscerate At Four')
+    eviscerateAtFiveComboPoints = Macro([ hasFiveComboPoints ], config.GAMEPAD_UP, debugName='Eviscerate At Five')
+
+    #ruptureAtXComboPoints
+    #KidneyShotAtXComboPoints
+
+    sinisterStrike = Macro([ have40Power, inMeleeRange ], config.GAMEPAD_RIGHT, debugName='SinisterStrike')
+    backStabIfNotInCombat = Macro([ have60Power, notInCombat, inMeleeRange ], config.GAMEPAD_Y, debugName='Backstab No Combat')
+    backStabIfNoAggro = Macro([ have40Power, targetIsNotAggro, inMeleeRange ], config.GAMEPAD_Y, debugName='Backstab No Aggro') 
 
 # macro order, first macro to be true picks the key to press restarts on success
 macros = [
-    
-    castGougeAt20Health,
-    bandageWhenGouged,
+    stealthIfOutOfCombat,
+   # castGougeAt20Health,
+   # bandageWhenGouged,
     willOfTheForsaken,
-    interuptTargetCast,
-    evasionAt50Health,
-    castGarrote,
-    sliceandiceAtTwoComboPoints,
+   # interuptTargetCast,
+   # evasionAt50Health,
+   # castGarrote,
+   # sliceandiceAtTwoComboPoints,
     eviscerateAtThreeComboPoints,
     eviscerateAtFourComboPoints,
     eviscerateAtFiveComboPoints,
+    backStabIfNotInCombat,
+    backStabIfNoAggro,
     sinisterStrike,
-    castDefaultAttack
-    
+    castDefaultAttack 
 ]
 
 

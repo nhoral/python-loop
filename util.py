@@ -19,3 +19,12 @@ def captureMatchedRegion(stateName):
         region.save('__debug__/' + stateName + '_region.png')
     except:
         print(stateName + ' not found')
+
+def getCornerRegion(width, height):
+    screen = pyautogui.screenshot();
+    screenWidth, screenHeight = screen.size 
+    
+    left = screenWidth - width
+    top = screenHeight - height
+
+    return (int(left), int(top), int(width), int(height))

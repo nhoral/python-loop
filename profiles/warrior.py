@@ -1,5 +1,5 @@
 from macro import Macro, Predicate
-from gamepad import BUTTON_B, BUTTON_L_B, BUTTON_L_Y, BUTTON_L_X, BUTTON_Y, BUTTON_R_B
+import config
 
 
 ## PREDICATES
@@ -24,9 +24,9 @@ healthUnder75 = Predicate ('health_under_75', True)
 #player resources points
 
 #player buffs
-battleShoutOff = Predicate('battleshout', False)
+battleShoutOff = Predicate('battle_shout', False)
 inBattleStance = Predicate('battle_stance', True)
-#inDefensiveStance = Predicate('defensive_stance', True)
+inDefensiveStance = Predicate('defensive_stance', True)
 #inBeserkerStance = Predicate('beserker_stance', True)
 inCombat = Predicate('combat', True)
 notInCombat = Predicate('combat', False)
@@ -36,6 +36,7 @@ bandageOffCooldown = Predicate('recently_bandaged_debuff', False)
 
 #player cooldowns
 shieldBashOffCooldown = Predicate('shield_bash_on_cooldown', False)
+tauntOffCooldown = Predicate('taunt_on_cooldown', False)
 
 #player reactions
 enemyCastingSpell = Predicate('enemy_casting', True)
@@ -60,14 +61,15 @@ rendOff = Predicate('rend', False)
 thunderclapOff = Predicate('thunderclap', False)
 hamstringOff = Predicate('hamstring', False)
 demoralizingRoarOff = Predicate('demoralizing_roar', False)
+sunderArmorStacksRemain = Predicate('sunder_armor', False)
 
 #target aggro
 targetIsAggro = Predicate('target_aggro', True)
 targetIsNotAggro = Predicate('target_aggro', False)
 
 #target range
-inMeleeRange = Predicate('meleerange', True)
-notInMeleeRange = Predicate('meleerange', False)
+inMeleeRange = Predicate('enemy_in_melee_range', True)
+notInMeleeRange = Predicate('enemy_in_melee_range', False)
 
 #enemy proximity - note can't find images
 oneEnemyInMeleeRange = Predicate('enemies_1', True)
@@ -75,29 +77,52 @@ twoEnemyInMeleeRange = Predicate('enemies_2', True)
 threeEnemyInMeleeRange = Predicate('enemies_3', True)
 fourEnemyInMeleeRange = Predicate('enemies_4', True)
 
-#default attack
-castDefaultAttack = Macro([], "1") #/startattack
+if (config.IS_KEYBOARD_MODE):
+    #default attack
+    castDefaultAttack = Macro([], "1") #/startattack
 
-##MACROS (keys to use 1,2,3,e,r,f,x,c,v,6,7,8,9,0, -, =, ;, ')
-shieldBashIfEnemyCasting = Macro([ enemyCastingSpell, have10Power, shieldBashOffCooldown ], "2")
-castBattleShoutIfOff = Macro([ have10Power, battleShoutOff ], "9")
-castRendIfOff = Macro([ have10Power, rendOff, inMeleeRange ], "3")
-castThunderclapIfOff = Macro([ have20Power, thunderclapOff, inMeleeRange ], "r")
-castHamstringIfOff = Macro([ have20Power, hamstringOff, inMeleeRange ], "f")
-castHeroicStrike = Macro([ have60Power, inMeleeRange ], "e")
-castCharge = Macro([ notInMeleeRange ], "v")
-castDemoralzingRoar = Macro([ demoralizingRoarOff, inMeleeRange], "0")
+    ##MACROS (keys to use 1,2,3,e,r,f,x,c,v,6,7,8,9,0, -, =, ;, ')
+    shieldBashIfEnemyCasting = Macro([ enemyCastingSpell, have10Power, shieldBashOffCooldown ], "2")
+    castBattleShoutIfOff = Macro([ have10Power, battleShoutOff ], "9")
+    castRendIfOff = Macro([ have10Power, rendOff, inMeleeRange ], "3")
+    castThunderclapIfOff = Macro([ have20Power, thunderclapOff, inMeleeRange ], "r")
+    castHamstringIfOff = Macro([ have20Power, hamstringOff, inMeleeRange ], "f")
+    castHeroicStrike = Macro([ have60Power, inMeleeRange ], "e")
+    castCharge = Macro([ notInMeleeRange ], "v")
+    castDemoralzingRoar = Macro([ demoralizingRoarOff, inMeleeRange], "0")
+else:
+    castDefaultAttack = Macro([], config.GAMEPAD_LEFT) 
+
+    shieldBashIfEnemyCasting = Macro([ enemyCastingSpell, have10Power, shieldBashOffCooldown ], config.GAMEPAD_DOWN)
+    castBattleShoutIfOff = Macro([ have10Power, battleShoutOff ], config.GAMEPAD_UP)
+    castRendIfOff = Macro([ have10Power, rendOff, inMeleeRange ], config.GAMEPAD_RIGHT)
+    castRendIfNoAggro = Macro([ targetIsNotAggro, rendOff, inMeleeRange ], config.GAMEPAD_RIGHT)
+    castThunderclapIfOff = Macro([ have20Power, thunderclapOff, inMeleeRange ], config.GAMEPAD_X)
+    castHamstringIfOff = Macro([ have20Power, hamstringOff, inMeleeRange ], config.GAMEPAD_Y)
+    castHeroicStrike = Macro([ have60Power, inMeleeRange ], config.GAMEPAD_B)
+    castSunderArmorIfNotFiveStacks = Macro([ have20Power, sunderArmorStacksRemain, inMeleeRange ], config.GAMEPAD_L_LEFT)
+    castDefensiveStanceIfLostAggro = Macro([ inBattleStance, targetIsNotAggro, inMeleeRange, tauntOffCooldown ], config.GAMEPAD_L_DOWN, debugName='Defense Stance')
+    castTauntIfLostAggro = Macro([ inDefensiveStance, targetIsNotAggro, inMeleeRange, tauntOffCooldown ], config.GAMEPAD_L_UP)
+    castBattleStanceIfHaveAggro = Macro([ inDefensiveStance, targetIsAggro ], config.GAMEPAD_L_RIGHT)
+    castBattleStanceIfOutOfCombat = Macro([ inDefensiveStance, notInCombat ], config.GAMEPAD_L_RIGHT)
+    usePotionIfUnder25 = Macro([ inCombat, healthUnder20 ], config.GAMEPAD_L_X)
+    #castCharge = Macro([ notInMeleeRange ], config.GAMEPAD_L_LEFT)
+    #castDemoralzingRoar = Macro([ demoralizingRoarOff, inMeleeRange], "0")
 
 # macro order, first macro to be true picks the key to press
 macros = [
-    
-    #shieldBashIfEnemyCasting,
+    castBattleStanceIfOutOfCombat,
+    usePotionIfUnder25,
+    shieldBashIfEnemyCasting,
+    castRendIfNoAggro,
+    castDefensiveStanceIfLostAggro,
+    castTauntIfLostAggro,
+    #castBattleStanceIfHaveAggro,
     castBattleShoutIfOff,
     castRendIfOff,
+    castSunderArmorIfNotFiveStacks,
     castThunderclapIfOff,
     castHamstringIfOff,
     castHeroicStrike,
-    castCharge,
-    castDefaultAttack
-    
+    castDefaultAttack   
 ]

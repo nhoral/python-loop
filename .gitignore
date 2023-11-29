@@ -3,3 +3,4 @@ __backup__
 *.zip
 __debug__
 __pycache__
+config

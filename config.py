@@ -1,14 +1,19 @@
 import util
+import platform
 
 # GENERAL
 
 IS_KEYBOARD_MODE = False
-REGION = util.getCornerRegion(1000, 1000)
+ADJUST_FOR_RETINA =  True if platform.system() == "Darwin" else False
 IMAGES_FOLDER = 'pc_images'
+CONFIDENCE = 0.95
+REGION_WIDTH = 1000
+REGION_HEIGHT = 1000
 
 # SCRIPT BINDINGS
 
-DEBUG = True                    # Displays extra logs to help with debugging keys
+DEBUG = False                    # Displays extra logs to help with debugging keys
+BENCHMARKING = True             # Displays benchmarking info
 STOP_KEY = "."                  # Key to stop the python process
 DEFAULT_KEYBOARD_KEY = '5'      # Default keyboard key you will press to engage the macros
 

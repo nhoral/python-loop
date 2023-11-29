@@ -1,9 +1,6 @@
 import config
 
-## Macro defintion, containing the criteria to activate, and the key to press when predicates are true
-# Example usage:
-#     immolationPredicate = Predicate('immolation', True)
-#     myMacro = Macro([immolationPredicate], "r")
+# TODO: Checking predicatesMet is oddly slow
 
 class Predicate():
     def __init__(self, stateName, shouldBe):

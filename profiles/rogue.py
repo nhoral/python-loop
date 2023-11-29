@@ -138,21 +138,21 @@ else:
 
 # macro order, first macro to be true picks the key to press restarts on success
 macros = [
-    stealthIfOutOfCombat,
-   # castGougeAt20Health,
-   # bandageWhenGouged,
-    willOfTheForsaken,
-   # interuptTargetCast,
-   # evasionAt50Health,
-   # castGarrote,
-   # sliceandiceAtTwoComboPoints,
-    eviscerateAtThreeComboPoints,
-    eviscerateAtFourComboPoints,
-    eviscerateAtFiveComboPoints,
-    backStabIfNotInCombat,
-    backStabIfNoAggro,
-    sinisterStrike,
-    castDefaultAttack 
+#     #stealthIfOutOfCombat,
+#    # castGougeAt20Health,
+#    # bandageWhenGouged,
+#     willOfTheForsaken,
+#    # interuptTargetCast,
+#    # evasionAt50Health,
+#    # castGarrote,
+#    # sliceandiceAtTwoComboPoints,
+#     eviscerateAtThreeComboPoints,
+#     eviscerateAtFourComboPoints,
+#     eviscerateAtFiveComboPoints,
+#     backStabIfNotInCombat,
+#     backStabIfNoAggro,
+#     sinisterStrike,
+     castDefaultAttack 
 ]
 
 

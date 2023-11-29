@@ -3,14 +3,12 @@ import time
 import keyboard
 from gamepad import XboxController
 import cv2
-import platform
 import util
 import config
+from timeit import default_timer as timer
 
-from profiles import rogue
-macros = rogue.macros
-
-ADJUST_FOR_RETINA =  True if platform.system() == "Darwin" else False
+from profiles import warrior
+macros = warrior.macros
 
 ## Builds a map of all the unique states present in your macros
 def getDefaultCombatState(macros):
@@ -23,33 +21,33 @@ def getDefaultCombatState(macros):
     return combatState
 
 ## Loads the images that will be evaluated into memory
-def getIconImages(combatState):
+def getIconImagesAndPositions(combatState):
     icons = {}
+    iconPositions = {}
 
     for key in combatState:
         image = cv2.imread(config.IMAGES_FOLDER + '/' + key + '.png')
 
-        if (ADJUST_FOR_RETINA):
+        if (config.ADJUST_FOR_RETINA):
             image = cv2.resize(image, (0, 0), fx = 0.5, fy = 0.5)
 
         icons[key] = image
 
-    return icons
+        # Initialize the positions to false until we start finding them
+        iconPositions[key] = False
+
+    return (icons, iconPositions)
 
 def pressKey(keyToPress):
     if config.DEBUG: print('Sending: ' + keyToPress)
-    pyautogui.keyDown(keyToPress) 
-    time.sleep(0.001)
-    pyautogui.keyUp(keyToPress) 
+    pyautogui.typewrite(keyToPress)
 
-# util.captureRegion will allow you to capture an image of your region to debug
-region = config.REGION
-util.captureRegion(config.REGION[0], config.REGION[1], config.REGION[2], config.REGION[3])
-#util.captureScreen()
+# Get the corner region to use
+region = util.getCornerRegion(config.REGION_WIDTH, config.REGION_HEIGHT)
 
 # Generate a set of unique conditions you are evaluating, based on your macros
 combatState = getDefaultCombatState(macros)
-iconImages = getIconImages(combatState)
+iconImages, iconPositions = getIconImagesAndPositions(combatState)
 
 ## MAIN LOOP
 print('Starting')
@@ -67,12 +65,28 @@ while (True):
         break
 
     if (buttonPressed):
+        # Debug and benchmarking
         if config.DEBUG: print('Button Pressed')
-        screen = pyautogui.screenshot(region=region)
+        if config.BENCHMARKING: start = timer()
+        
+        screen = util.grabScreenRegion(region)
+
         for key, val in combatState.items():
             try:
-                # Throws exception if image not found
-                pyautogui.locate(iconImages[key], screen, confidence=0.95)
+                if (iconPositions[key]):
+                    positionSaved = iconPositions[key]
+                    pyautogui.locate(iconImages[key], screen.crop(positionSaved), confidence=config.CONFIDENCE)
+                    if config.DEBUG: print("Found " + key + " in saved positions")
+                else:
+                    positionFound = pyautogui.locate(iconImages[key], screen, confidence=config.CONFIDENCE)
+                    iconPositions[key] = (
+                        positionFound.left,
+                        positionFound.top,
+                        positionFound.left + positionFound.width,
+                        positionFound.top + positionFound.height
+                    )
+                    if config.DEBUG: print("Saved " + key + " into saved positions")
+
                 combatState[key] = True
             except:
                 if config.DEBUG: print(key + ' not found in image')
@@ -82,5 +96,8 @@ while (True):
             if (macro.predicatesMet(combatState)):
                 pressKey(macro.keyToPress)
                 break
-        
-    time.sleep(0.05)
+
+        if config.BENCHMARKING: 
+            print('Loop took ' + str(timer() - start))
+    
+    time.sleep(0.01)

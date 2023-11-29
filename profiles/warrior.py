@@ -4,7 +4,9 @@ import config
 
 ## PREDICATES
 #power meters
+have5Power = Predicate('power_5', True)
 have10Power = Predicate('power_10', True)
+have15Power = Predicate('power_15', True)
 have20Power = Predicate('power_20', True)
 have30Power = Predicate('power_30', True)
 have40Power = Predicate('power_40', True)
@@ -26,7 +28,9 @@ healthUnder75 = Predicate ('health_under_75', True)
 #player buffs
 battleShoutOff = Predicate('battle_shout', False)
 inBattleStance = Predicate('battle_stance', True)
+notInBattleStance = Predicate('battle_stance', False)
 inDefensiveStance = Predicate('defensive_stance', True)
+notInDefensiveStance = Predicate('defensive_stance', False)
 #inBeserkerStance = Predicate('beserker_stance', True)
 inCombat = Predicate('combat', True)
 notInCombat = Predicate('combat', False)
@@ -37,9 +41,13 @@ bandageOffCooldown = Predicate('recently_bandaged_debuff', False)
 #player cooldowns
 shieldBashOffCooldown = Predicate('shield_bash_on_cooldown', False)
 tauntOffCooldown = Predicate('taunt_on_cooldown', False)
+tauntOnCooldown = Predicate('taunt_on_cooldown', True) 
 
 #player reactions
 enemyCastingSpell = Predicate('enemy_casting', True)
+revengeIsUsable = Predicate('revenge_usable', True)
+overpowerIsUsable = Predicate('overpower_usable', True)
+overpowerIsNotUsable = Predicate('overpower_usable', False)
 
 #player actions
 
@@ -60,7 +68,7 @@ targetHealthOver75 = Predicate ('target_health_under_75', False)
 rendOff = Predicate('rend', False)
 thunderclapOff = Predicate('thunderclap', False)
 hamstringOff = Predicate('hamstring', False)
-demoralizingRoarOff = Predicate('demoralizing_roar', False)
+demoralizingShoutOff = Predicate('demoralizing_shout', False)
 sunderArmorStacksRemain = Predicate('sunder_armor', False)
 
 #target aggro
@@ -89,39 +97,82 @@ if (config.IS_KEYBOARD_MODE):
     castHamstringIfOff = Macro([ have20Power, hamstringOff, inMeleeRange ], "f")
     castHeroicStrike = Macro([ have60Power, inMeleeRange ], "e")
     castCharge = Macro([ notInMeleeRange ], "v")
-    castDemoralzingRoar = Macro([ demoralizingRoarOff, inMeleeRange], "0")
+    castDemoralzingRoar = Macro([ demoralizingShoutOff, inMeleeRange], "0")
 else:
-    castDefaultAttack = Macro([], config.GAMEPAD_LEFT) 
+    castDefaultAttack = Macro([], config.GAMEPAD_LEFT, debugName="Default Attack") 
 
-    shieldBashIfEnemyCasting = Macro([ enemyCastingSpell, have10Power, shieldBashOffCooldown ], config.GAMEPAD_DOWN)
-    castBattleShoutIfOff = Macro([ have10Power, battleShoutOff ], config.GAMEPAD_UP)
-    castRendIfOff = Macro([ have10Power, rendOff, inMeleeRange ], config.GAMEPAD_RIGHT)
-    castRendIfNoAggro = Macro([ targetIsNotAggro, rendOff, inMeleeRange ], config.GAMEPAD_RIGHT)
-    castThunderclapIfOff = Macro([ have20Power, thunderclapOff, inMeleeRange ], config.GAMEPAD_X)
-    castHamstringIfOff = Macro([ have20Power, hamstringOff, inMeleeRange ], config.GAMEPAD_Y)
-    castHeroicStrike = Macro([ have60Power, inMeleeRange ], config.GAMEPAD_B)
-    castSunderArmorIfNotFiveStacks = Macro([ have20Power, sunderArmorStacksRemain, inMeleeRange ], config.GAMEPAD_L_LEFT)
-    castDefensiveStanceIfLostAggro = Macro([ inBattleStance, targetIsNotAggro, inMeleeRange, tauntOffCooldown ], config.GAMEPAD_L_DOWN, debugName='Defense Stance')
-    castTauntIfLostAggro = Macro([ inDefensiveStance, targetIsNotAggro, inMeleeRange, tauntOffCooldown ], config.GAMEPAD_L_UP)
-    castBattleStanceIfHaveAggro = Macro([ inDefensiveStance, targetIsAggro ], config.GAMEPAD_L_RIGHT)
-    castBattleStanceIfOutOfCombat = Macro([ inDefensiveStance, notInCombat ], config.GAMEPAD_L_RIGHT)
-    usePotionIfUnder25 = Macro([ inCombat, healthUnder20 ], config.GAMEPAD_L_X)
-    #castCharge = Macro([ notInMeleeRange ], config.GAMEPAD_L_LEFT)
+    # Stance independant
+    castBattleShoutIfOff = Macro([ have10Power, battleShoutOff ], config.GAMEPAD_UP, debugName="Battle Shout")
+    castRendIfOff = Macro([ have10Power, rendOff, inMeleeRange ], config.GAMEPAD_RIGHT, debugName="Rend")
+    castRendIfNoAggro = Macro([ notInDefensiveStance, targetIsNotAggro, rendOff, inMeleeRange ], config.GAMEPAD_RIGHT, debugName="Rend No Aggro")
+    shieldBashIfEnemyCasting = Macro([ enemyCastingSpell, have10Power, shieldBashOffCooldown ], config.GAMEPAD_DOWN, debugName="Shield Bash")
+    castHeroicStrike = Macro([ have60Power, inMeleeRange ], config.GAMEPAD_B, debugName="Heroic Strike")
+    castSunderArmorIfNotFiveStacks = Macro([ have15Power, sunderArmorStacksRemain, inMeleeRange ], config.GAMEPAD_L_LEFT, debugName="Sunder Armor")
+    castDemoralzingRoarIfOff = Macro([ have10Power, demoralizingShoutOff, inMeleeRange], config.GAMEPAD_R_LEFT, debugName="Demoralizing Shout")
+    usePotionIfUnder25 = Macro([ inCombat, healthUnder20 ], config.GAMEPAD_L_X, debugName="Potion")
+    
+    # Battle Stance
+    castThunderclapIfOff = Macro([ have20Power, thunderclapOff, inMeleeRange ], config.GAMEPAD_X, debugName="Thunder Clap")
+    castHamstringIfOff = Macro([ have20Power, hamstringOff, inMeleeRange ], config.GAMEPAD_Y, debugName="Hamstring")
+
+    # Switch Into Battle Stance
+    castBattleStanceIfOutOfCombat = Macro([ notInBattleStance, notInCombat ], config.GAMEPAD_L_RIGHT, debugName="Battle Stance OOC")
+
+    castBattleStanceIfMockingBlow = Macro([ notInBattleStance, targetIsNotAggro, tauntOnCooldown, inMeleeRange ], config.GAMEPAD_L_RIGHT, debugName="Battle Stance of Mocking Blow")
+    castMockingBlowIfTauntDown = Macro([ inBattleStance, have10Power, targetIsNotAggro, tauntOnCooldown, inMeleeRange ], config.GAMEPAD_L_B, debugName="Mocking Blow")
+
+    castBattleStanceIfOverpower = Macro([ notInBattleStance, overpowerIsUsable ], config.GAMEPAD_L_RIGHT, debugName="Battle Stance for Overpower")
+    castOverpowerIfUsable = Macro([ inBattleStance, have5Power, inMeleeRange, overpowerIsUsable ], config.GAMEPAD_R_UP, debugName="Overpower")
+
+    # Defensive Stance
+    
+
+    # Switch Into Defensive Stance
+    castDefensiveStanceForRevenge = Macro([ notInDefensiveStance, overpowerIsNotUsable, revengeIsUsable ], config.GAMEPAD_L_DOWN, debugName='Defense Stance for Revenge')
+    castRevengeIfUsable = Macro([ inDefensiveStance, have5Power, inMeleeRange, revengeIsUsable ], config.GAMEPAD_R_DOWN, debugName="Revenge")
+
+    castDefensiveStanceIfLostAggro = Macro([ notInDefensiveStance, targetIsNotAggro, inMeleeRange, tauntOffCooldown ], config.GAMEPAD_L_DOWN, debugName='Defense Stance for Taunt')
+    castTauntIfLostAggro = Macro([ inDefensiveStance, targetIsNotAggro, inMeleeRange, tauntOffCooldown ], config.GAMEPAD_L_UP, debugName="Taunt")
+    
+
     #castDemoralzingRoar = Macro([ demoralizingRoarOff, inMeleeRange], "0")
 
 # macro order, first macro to be true picks the key to press
 macros = [
+    # OOC
     castBattleStanceIfOutOfCombat,
+
+    # Emergency
     usePotionIfUnder25,
+
+    # Silence
     shieldBashIfEnemyCasting,
+
+    # Fight Buff
+    castBattleShoutIfOff,
+    castDemoralzingRoarIfOff,
+
+    # Taunt and Rend to avoid pre-aggro stance switch
     castRendIfNoAggro,
     castDefensiveStanceIfLostAggro,
     castTauntIfLostAggro,
-    #castBattleStanceIfHaveAggro,
-    castBattleShoutIfOff,
+
+    # Use Mocking Blow if taunt not ready
+    castBattleStanceIfMockingBlow,
+    castMockingBlowIfTauntDown,
+
+    # Use Overpower if we can
+    castBattleStanceIfOverpower,
+    castOverpowerIfUsable,
+
+    # Use Revenge if we can
+    castDefensiveStanceForRevenge,
+    castRevengeIfUsable,
+
+    # Main loop
     castRendIfOff,
     castSunderArmorIfNotFiveStacks,
-    castThunderclapIfOff,
+    # castThunderclapIfOff, <- Get 3 enemy check?
     castHamstringIfOff,
     castHeroicStrike,
     castDefaultAttack   

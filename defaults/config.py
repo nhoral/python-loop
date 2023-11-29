@@ -1,17 +1,19 @@
-# DEFAULT CONFIG WITH OPTIONS
-# Copy to base directory and edit to set your own config values
-
 import util
+import platform
 
 # GENERAL
 
 IS_KEYBOARD_MODE = False
-REGION = util.getCornerRegion(1000, 1000)
+ADJUST_FOR_RETINA =  True if platform.system() == "Darwin" else False
 IMAGES_FOLDER = 'pc_images'
+CONFIDENCE = 0.95
+REGION_WIDTH = 1000
+REGION_HEIGHT = 1000
 
 # SCRIPT BINDINGS
 
-DEBUG = True                    # Displays extra logs to help with debugging keys
+DEBUG = False                    # Displays extra logs to help with debugging keys
+BENCHMARKING = True             # Displays benchmarking info
 STOP_KEY = "."                  # Key to stop the python process
 DEFAULT_KEYBOARD_KEY = '5'      # Default keyboard key you will press to engage the macros
 
@@ -27,9 +29,9 @@ ACTION_BAR_1_BUTTON_6 = '6'
 ACTION_BAR_1_BUTTON_7 = '7'
 ACTION_BAR_1_BUTTON_8 = '8'
 ACTION_BAR_1_BUTTON_9 = '9'
-ACTION_BAR_1_BUTTON_10 = '10'
-ACTION_BAR_1_BUTTON_11 = '11'
-ACTION_BAR_1_BUTTON_12 = '12'
+ACTION_BAR_1_BUTTON_10 = '0'
+ACTION_BAR_1_BUTTON_11 = '-'
+ACTION_BAR_1_BUTTON_12 = '='
 
 # Action Bar 2
 ACTION_BAR_2_BUTTON_1 = 'Q'

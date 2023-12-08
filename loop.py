@@ -7,8 +7,8 @@ import util
 import config
 from timeit import default_timer as timer
 
-from profiles import warrior
-macros = warrior.macros
+from profiles import shaman_healer
+macros = shaman_healer.macros
 
 ## Builds a map of all the unique states present in your macros
 def getDefaultCombatState(macros):
@@ -99,5 +99,5 @@ while (True):
 
         if config.BENCHMARKING: 
             print('Loop took ' + str(timer() - start))
-    
+
     time.sleep(0.01)

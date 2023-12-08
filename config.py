@@ -12,7 +12,7 @@ REGION_HEIGHT = 1000
 
 # SCRIPT BINDINGS
 
-DEBUG = False                    # Displays extra logs to help with debugging keys
+DEBUG = True                    # Displays extra logs to help with debugging keys
 BENCHMARKING = True             # Displays benchmarking info
 STOP_KEY = "."                  # Key to stop the python process
 DEFAULT_KEYBOARD_KEY = '5'      # Default keyboard key you will press to engage the macros
@@ -34,18 +34,25 @@ ACTION_BAR_1_BUTTON_11 = '-'
 ACTION_BAR_1_BUTTON_12 = '='
 
 # Action Bar 2
-ACTION_BAR_2_BUTTON_1 = 'Q'
-ACTION_BAR_2_BUTTON_2 = 'E'
-ACTION_BAR_2_BUTTON_3 = 'R'
-ACTION_BAR_2_BUTTON_4 = 'T'
-ACTION_BAR_2_BUTTON_5 = 'Y'
-ACTION_BAR_2_BUTTON_6 = 'U'
-ACTION_BAR_2_BUTTON_7 = 'I'
-ACTION_BAR_2_BUTTON_8 = 'O'
-ACTION_BAR_2_BUTTON_9 = 'P'
+ACTION_BAR_2_BUTTON_1 = 'q'
+ACTION_BAR_2_BUTTON_2 = 'e'
+ACTION_BAR_2_BUTTON_3 = 'r'
+ACTION_BAR_2_BUTTON_4 = 't'
+ACTION_BAR_2_BUTTON_5 = 'y'
+ACTION_BAR_2_BUTTON_6 = 'u'
+ACTION_BAR_2_BUTTON_7 = 'i'
+ACTION_BAR_2_BUTTON_8 = 'o'
+ACTION_BAR_2_BUTTON_9 = 'p'
 ACTION_BAR_2_BUTTON_10 = '['
 ACTION_BAR_2_BUTTON_11 = ']'
 ACTION_BAR_2_BUTTON_12 = '\\'
+
+# Action Bar 4
+ACTION_BAR_4_BUTTON_1 = '!'
+ACTION_BAR_4_BUTTON_2 = '@'
+ACTION_BAR_4_BUTTON_3 = '#'
+ACTION_BAR_4_BUTTON_4 = '$'
+ACTION_BAR_4_BUTTON_5 = '%'
 
 # CONTROLLER KEYBINDS
 

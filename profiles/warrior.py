@@ -74,6 +74,7 @@ sunderArmorStacksRemain = Predicate('sunder_armor', False)
 #target aggro
 targetIsAggro = Predicate('target_aggro', True)
 targetIsNotAggro = Predicate('target_aggro', False)
+enemyIsLoose = Predicate('enemy_loose', True)
 
 #target range
 inMeleeRange = Predicate('enemy_in_melee_range', True)
@@ -134,6 +135,8 @@ else:
     castDefensiveStanceIfLostAggro = Macro([ notInDefensiveStance, targetIsNotAggro, inMeleeRange, tauntOffCooldown ], config.GAMEPAD_L_DOWN, debugName='Defense Stance for Taunt')
     castTauntIfLostAggro = Macro([ inDefensiveStance, targetIsNotAggro, inMeleeRange, tauntOffCooldown ], config.GAMEPAD_L_UP, debugName="Taunt")
     
+    # If there is an enemy loose, but we already have aggro on this enemy, target another enemy
+    targetNextIfLostAggro = Macro([ enemyIsLoose, targetIsAggro ], config.GAMEPAD_R_RIGHT, debugName='targetNextIfLostAggro')
 
     #castDemoralzingRoar = Macro([ demoralizingRoarOff, inMeleeRange], "0")
 
@@ -144,6 +147,8 @@ macros = [
 
     # Emergency
     usePotionIfUnder25,
+
+    targetNextIfLostAggro,
 
     # Silence
     shieldBashIfEnemyCasting,

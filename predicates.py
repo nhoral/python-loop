@@ -87,6 +87,7 @@ targetHealthOver75 = Predicate ('target_health_under_75', False)
 #target aggro
 targetIsAggro = Predicate('target_aggro', True)
 targetIsNotAggro = Predicate('target_aggro', False)
+enemyIsLoose = Predicate('enemy_loose', True)
 
 #target range
 inMeleeRange = Predicate('enemy_in_melee_range', True)

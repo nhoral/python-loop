@@ -35,10 +35,14 @@ castFlameshockIfUsable = Macro([ minimumPowerForHealing, predicates.enemyRange20
 castMoltenBlastIfUsable = Macro([ minimumPowerForHealing, predicates.enemyRange20, predicates.moltenBlastIsUsable ], config.GAMEPAD_L_B, debugName='castMoltenBlastIfUsable') 
 castEarthShockToSilenceIfUsable = Macro([ predicates.have30Power, predicates.enemyRange20, predicates.earthShockIsUsable, predicates.enemyCastingSpell ], config.GAMEPAD_X, debugName='castEarthShockToSilenceIfUable')
 
+# If there is an enemy loose, but we already have aggro on this enemy, target another enemy
+targetNextIfLostAggro = Macro([ predicates.enemyIsLoose, predicates.targetIsAggro ], config.GAMEPAD_R_B, debugName='targetNextIfLostAggro')
+
 # macro order, first macro to be true picks the key to press
 macros = [
     castStoneclawTotemIfUnder20Health,
     #castEarthbindTotemIfFleeing,
+    targetNextIfLostAggro,
     castHealingWaveIfHurt,
     castHealingWaveOnParty1,
     castHealingWaveOnParty2,
